@@ -1,3 +1,5 @@
+export const BASE_URL = "http://localhost:1337";
+
 export const COLORS = {
   light: {
     background: "hsl(0 0% 100%)",

@@ -12,6 +12,9 @@ export interface CategoryType {
     createdAt: Date;
     updatedAt: Date;
     publishedAt: Date;
+    image: {
+      data: StrapiImage;
+    };
   };
 }
 export interface ProductType {
@@ -29,6 +32,9 @@ export interface ProductType {
     likes: number;
     sales: number;
     stock: number;
+    images: {
+      data: StrapiImage[];
+    };
   };
 }
 
@@ -44,4 +50,37 @@ export interface ProductsMetaType {
   meta: {
     pagination: Pagination;
   };
+}
+
+interface StrapiImage {
+  id: number;
+  attributes: {
+    name: string;
+    alternativeText: null;
+    caption: null;
+    width: number;
+    height: number;
+    formats: {
+      thumbnail: StrapiImageFormat;
+      large: StrapiImageFormat;
+      medium: StrapiImageFormat;
+      small: StrapiImageFormat;
+    };
+    hash: string;
+    size: number;
+    url: string;
+    previewUrl: null;
+    provider_metadata: null;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+}
+
+interface StrapiImageFormat {
+  hash: string;
+  path: null;
+  width: number;
+  height: number;
+  size: number;
+  url: string;
 }
