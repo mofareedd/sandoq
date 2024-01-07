@@ -1,31 +1,42 @@
-import { StyleSheet } from 'react-native';
+import { Button } from "@/components/ui/button";
+import { useCategory } from "@/hooks/useStrapi";
+import { Link } from "expo-router";
+import { ShoppingBag } from "lucide-react-native";
+import React from "react";
+import { ScrollView, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import EditScreenInfo from '../../components/EditScreenInfo';
-import { Text, View } from '../../components/Themed';
-
-export default function TabOneScreen() {
+export default function Home() {
+  const { data: categories, isLoading } = useCategory();
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
-    </View>
+    <SafeAreaView className="flex-1 py-4 gap-4">
+      <View className="flex-row items-center justify-between px-6">
+        <Text className="text-3xl font-medium">Sandoq</Text>
+        <ShoppingBag color={"#333"} />
+      </View>
+
+      <View className="my-4">
+        <View className="flex-row items-center justify-between px-6 mb-4">
+          <Text className="text-xl font-medium">Categories</Text>
+          <Link href={""}>
+            <Text className="text-muted-foreground text-lg">See All</Text>
+          </Link>
+        </View>
+        <ScrollView
+          horizontal
+          className=""
+          showsHorizontalScrollIndicator={false}
+        >
+          {categories && categories.length
+            ? categories.map((category) => (
+                <View className="items-center ml-6 gap-2" key={category.id}>
+                  <View className="w-16 h-16 rounded-full bg-border" />
+                  <Text>{category.attributes.name}</Text>
+                </View>
+              ))
+            : null}
+        </ScrollView>
+      </View>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});
