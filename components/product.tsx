@@ -1,15 +1,16 @@
 import { ProductType } from "@/types";
-import React from "react";
+import React, { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import ProductImage from "./product-image";
 import { BASE_URL } from "@/lib/constants";
 import { Heart, ShoppingBag } from "lucide-react-native";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
+import { useStore } from "@/hooks/useStore";
 
 interface ProductListProps {
   products: ProductType[];
-  label: string;
+  label?: string;
   isHorizontal?: boolean;
 }
 export function ProductsList({
@@ -19,7 +20,9 @@ export function ProductsList({
 }: ProductListProps) {
   return (
     <View className="">
-      <Text className="px-6 mb-4 font-bold text-xl">{label}</Text>
+      {label ? (
+        <Text className="px-6 mb-4 font-bold text-xl">{label}</Text>
+      ) : null}
       <ScrollView
         horizontal={isHorizontal}
         className=""
@@ -43,12 +46,17 @@ export function ProductsList({
 }
 
 export function ProductCard({
-  product: { attributes },
+  product,
   isRow = false,
 }: {
   product: ProductType;
   isRow?: boolean;
 }) {
+  const [isLiked, setIsLiked] = useState(false);
+
+  const { attributes } = product;
+  const { addToCart } = useStore();
+
   return (
     <View className={cn("gap-4", isRow ? "flex-row" : "flex-col")}>
       <View
@@ -61,8 +69,12 @@ export function ProductCard({
           <Text className="text-background bg-orange-400 rounded-md overflow-hidden px-2 py-1 text-xs font-bold">
             50%
           </Text>
-          <Pressable>
-            <Heart size={20} className="text-muted-foreground" />
+          <Pressable onPress={() => setIsLiked(!isLiked)}>
+            <Heart
+              size={20}
+              className={cn(isLiked ? "text-red-500" : "text-muted-foreground")}
+              fill={isLiked ? "red" : "none"}
+            />
           </Pressable>
         </View>
         <ProductImage
@@ -105,6 +117,7 @@ export function ProductCard({
               size={"sm"}
               className="text-xs w-20 h-10 flex-row items-center gap-2"
               textClass="text-white"
+              onPress={() => addToCart({ ...product, count: 1 })}
             >
               <ShoppingBag size={16} className="text-background" />
               <Text className="text-background">Buy</Text>

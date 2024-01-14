@@ -1,35 +1,37 @@
 import React from "react";
-import { ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import ProductImage from "./product-image";
 import { BASE_URL } from "@/lib/constants";
 import { useCategory } from "@/hooks/useCategory";
+import { Button } from "./ui/button";
 
 export default function Categories() {
   const { data: categories, isLoading } = useCategory();
+  const [selectedCategory, setSelectedCategory] = React.useState<number | null>(
+    null
+  );
 
+  function onChangeCategory(id: number) {
+    selectedCategory === id
+      ? setSelectedCategory(null)
+      : setSelectedCategory(id);
+  }
   return (
     <ScrollView horizontal className="" showsHorizontalScrollIndicator={false}>
       {categories && categories.length
         ? categories.map((category) => {
+            const isSelected = selectedCategory === category.id;
             return (
-              <View
-                className="items-center ml-6 gap-2 relative"
+              <Button
+                onPress={() => onChangeCategory(category.id)}
+                className="ml-6 px-4 rounded-xl"
                 key={category.id}
+                variant={isSelected ? "default" : "outline"}
+                size={"sm"}
+                textClass="font-normal capitalize"
               >
-                <View className="rounded-full  items-center justify-center">
-                  <ProductImage
-                    source={`${BASE_URL}${category.attributes.image.data.attributes.url}`}
-                    style={{
-                      width: 60,
-                      height: 60,
-                      borderRadius: 50,
-                      borderWidth: 1,
-                      borderColor: "#999",
-                    }}
-                  />
-                </View>
-                <Text className="capitalize">{category.attributes.name}</Text>
-              </View>
+                {category.attributes.name}
+              </Button>
             );
           })
         : null}
