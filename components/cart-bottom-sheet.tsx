@@ -1,56 +1,64 @@
-import { useCallback, useMemo, useRef } from "react";
-import { Pressable, Text, View } from "react-native";
-import {
-  BottomSheetModal,
-  BottomSheetModalProvider,
-} from "@gorhom/bottom-sheet";
-import { ShoppingBag } from "lucide-react-native";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
+import { Text, View } from "react-native";
+import { useStore } from "@/hooks/useStore";
 
-export function CartBottomSheet() {
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+interface CartBottomSheetProps {
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
+}
+export function CartBottomSheet({
+  isOpen,
+  onOpenChange,
+}: CartBottomSheetProps) {
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const snapPoints = useMemo(() => ["30%"], []);
 
-  // variables
-  const snapPoints = useMemo(() => ["25%", "50%"], []);
+  const { cart } = useStore();
 
-  // callbacks
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
-  }, []);
   const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
+    if (index < 0) {
+      onOpenChange(false);
+    }
   }, []);
 
-  return (
-    <BottomSheetModalProvider>
-      <Pressable onPress={handlePresentModalPress} className="relative">
-        <ShoppingBag color={"#333"} />
-        <View className="absolute bg-red-500 z-10 w-5 h-5 rounded-full -top-2 -right-2 items-center justify-center">
-          <Text className="text-white text-xs">{0}</Text>
-        </View>
-      </Pressable>
-      <View className="flex-1">
-        <BottomSheetModal
-          ref={bottomSheetModalRef}
-          index={1}
-          snapPoints={snapPoints}
-          style={{
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
+  useEffect(() => {
+    if (isOpen) {
+      bottomSheetRef.current?.snapToIndex(0);
+    } else {
+      bottomSheetRef.current?.close();
+    }
+  }, [isOpen]);
 
-            elevation: 5,
-          }}
-          onChange={handleSheetChanges}
-        >
-          <View className="flex-1 items-center justify-center">
-            <Text>Awesome 🎉</Text>
-          </View>
-        </BottomSheetModal>
+  const renderBackdrop = useCallback(
+    (props: any) => (
+      <BottomSheetBackdrop
+        {...props}
+        disappearsOnIndex={-1}
+        appearsOnIndex={0}
+      />
+    ),
+    []
+  );
+  return (
+    <BottomSheet
+      ref={bottomSheetRef}
+      index={0}
+      enablePanDownToClose={true}
+      snapPoints={snapPoints}
+      backdropComponent={renderBackdrop}
+      style={{ backgroundColor: "#fff", zIndex: 500 }}
+      onChange={handleSheetChanges}
+    >
+      <View className="flex-1">
+        <Text className="">Awesome Bottom Sheet 🎉</Text>
       </View>
-    </BottomSheetModalProvider>
+    </BottomSheet>
   );
 }
