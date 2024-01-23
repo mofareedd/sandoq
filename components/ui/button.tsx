@@ -101,8 +101,8 @@ const Button = React.forwardRef<
               variant,
               size,
               className: cn(
-                className,
-                disabled && "opacity-50 web:cursor-default"
+                disabled && "opacity-50 web:cursor-default",
+                className
               ),
             })
           )}
