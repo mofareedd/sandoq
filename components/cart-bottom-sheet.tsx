@@ -21,7 +21,8 @@ export function CartBottomSheet({
   onOpenChange,
 }: CartBottomSheetProps) {
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ["30%", "60%"], []);
+  // const snapPoints = useMemo(() => ["30%", "60%"], []);
+  const snapPoints = useMemo(() => ["60%"], []);
 
   const { cart } = useStore();
 
@@ -59,7 +60,7 @@ export function CartBottomSheet({
       style={{ backgroundColor: "#fff", zIndex: 500 }}
       onChange={handleSheetChanges}
     >
-      <ScrollView className="flex-1">
+      <ScrollView className="flex-1 pb-16">
         <View className="flex-1 h-full px-6 py-2 justify-between">
           {/* <Text className="">Awesome Bottom Sheet 🎉</Text> */}
           <View className="space-y-4">
