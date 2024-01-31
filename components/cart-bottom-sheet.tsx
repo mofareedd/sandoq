@@ -106,7 +106,9 @@ export function CartBottomSheet({
               <Text className="text-center">Cart is empty</Text>
             )}
           </View>
-          <Button className="py-2 text-sm my-4">Checkout</Button>
+          {cart.length ? (
+            <Button className="py-2 text-sm my-4">Checkout</Button>
+          ) : null}
         </View>
       </ScrollView>
     </BottomSheet>
