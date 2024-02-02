@@ -33,7 +33,7 @@ export default function Home() {
           <Pressable onPress={() => setIsOpen(true)} className="relative">
             <ShoppingBag color={"#333"} />
             <View className="absolute bg-red-500 z-10 w-5 h-5 rounded-full -top-2 -right-2 items-center justify-center">
-              <Text className="text-white text-xs">{0}</Text>
+              <Text className="text-white text-xs">{cartLength}</Text>
             </View>
           </Pressable>
         </View>

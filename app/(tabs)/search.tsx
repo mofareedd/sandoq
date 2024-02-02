@@ -3,48 +3,54 @@ import { Input } from "@/components/ui/input";
 import { useCategory } from "@/hooks/useCategory";
 import { BASE_URL } from "@/lib/constants";
 import React from "react";
-import { FlatList, Text, View } from "react-native";
+import { FlatList, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Search() {
   const { data, isLoading } = useCategory();
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex-1 px-6 py-4">
-        <View>
-          <Input placeholder="Search" />
-        </View>
+      <ScrollView>
+        <View className="flex-1 px-6 py-4">
+          <View className="mb-6">
+            <Input placeholder="Search" />
+          </View>
 
-        <View className="">
-          {data && data.length ? (
-            <FlatList
-              data={data}
-              numColumns={2}
-              keyExtractor={(item) => item.id.toString()}
-              contentContainerStyle={{ gap: 10 }}
-              columnWrapperStyle={{ gap: 10 }}
-              renderItem={({ item }) => {
-                return (
-                  <View className="relative flex-1 h-52">
-                    <View className="absolute z-10 items-center justify-center w-full h-full">
-                      <Text className="">{item.attributes.name}</Text>
+          <View className="">
+            {data && data.length ? (
+              <FlatList
+                data={data}
+                numColumns={2}
+                keyExtractor={(item) => item.id.toString()}
+                contentContainerStyle={{ gap: 10 }}
+                columnWrapperStyle={{ gap: 10 }}
+                scrollEnabled={false}
+                renderItem={({ item }) => {
+                  return (
+                    <View className="relative flex-1 h-52 rounded-lg overflow-hidden">
+                      <View className="absolute z-20 items-center justify-center w-full h-full">
+                        <Text className="text-white text-xl font-bold">
+                          {item.attributes.name}
+                        </Text>
+                      </View>
+
+                      <View className="absolute left-0 top-0 w-full h-full bg-black/40 z-10" />
+                      <ProductImage
+                        source={`${BASE_URL}${item.attributes.image.data.attributes.url}`}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "contain",
+                        }}
+                      />
                     </View>
-
-                    <ProductImage
-                      source={`${BASE_URL}${item.attributes.image}`}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "contain",
-                      }}
-                    />
-                  </View>
-                );
-              }}
-            />
-          ) : null}
+                  );
+                }}
+              />
+            ) : null}
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
