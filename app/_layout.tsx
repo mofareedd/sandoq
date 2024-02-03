@@ -8,6 +8,7 @@ import { Theme, ThemeProvider } from "@react-navigation/native";
 import { COLORS } from "@/lib/constants";
 import { StatusBar } from "expo-status-bar";
 import { QueryContext } from "@/components/context/query-context";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -59,11 +60,13 @@ function RootLayoutNav() {
     <ThemeProvider value={colorScheme === "light" ? LIGHT_THEME : DARK_THEME}>
       <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
       <QueryContext>
-        <SafeAreaProvider>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          </Stack>
-        </SafeAreaProvider>
+        <BottomSheetModalProvider>
+          <SafeAreaProvider>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            </Stack>
+          </SafeAreaProvider>
+        </BottomSheetModalProvider>
       </QueryContext>
     </ThemeProvider>
   );

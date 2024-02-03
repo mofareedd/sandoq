@@ -5,26 +5,24 @@ import React, {
   useRef,
   useState,
 } from "react";
-import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+} from "@gorhom/bottom-sheet";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { useStore } from "@/hooks/useStore";
 import ProductImage from "./product-image";
 import { BASE_URL } from "@/lib/constants";
 import { Button } from "./ui/button";
 
-interface CartBottomSheetProps {
-  isOpen: boolean;
-  onOpenChange: (isOpen: boolean) => void;
-}
-export function CartBottomSheet({
-  isOpen,
-  onOpenChange,
-}: CartBottomSheetProps) {
-  const bottomSheetRef = useRef<BottomSheet>(null);
+interface CartBottomSheetProps {}
+export function CartBottomSheet({}: CartBottomSheetProps) {
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
   // const snapPoints = useMemo(() => ["30%", "60%"], []);
   const snapPoints = useMemo(() => ["60%"], []);
 
-  const { cart } = useStore();
+  const { cart, isOpen, onOpenChange } = useStore();
 
   const handleSheetChanges = useCallback((index: number) => {
     if (index < 0) {
@@ -34,9 +32,10 @@ export function CartBottomSheet({
 
   useEffect(() => {
     if (isOpen) {
-      bottomSheetRef.current?.snapToIndex(0);
+      // bottomSheetModalRef.current?.snapToIndex(0);
+      bottomSheetModalRef.current?.present();
     } else {
-      bottomSheetRef.current?.close();
+      bottomSheetModalRef.current?.close();
     }
   }, [isOpen]);
 
@@ -51,19 +50,19 @@ export function CartBottomSheet({
     []
   );
   return (
-    <BottomSheet
-      ref={bottomSheetRef}
+    <BottomSheetModal
+      ref={bottomSheetModalRef}
       index={0}
       enablePanDownToClose={true}
       snapPoints={snapPoints}
       backdropComponent={renderBackdrop}
-      style={{ backgroundColor: "#fff", zIndex: 500 }}
+      style={{ backgroundColor: "#fff", paddingBottom: 10 }}
       onChange={handleSheetChanges}
     >
       <ScrollView className="flex-1 pb-16">
-        <View className="flex-1 h-full px-6 py-2 justify-between">
+        <View className="flex-1 h-full px-6 py-2 justify-between relative">
           {/* <Text className="">Awesome Bottom Sheet 🎉</Text> */}
-          <View className="space-y-4">
+          <View className="gap-4">
             {cart.length ? (
               cart.map((p) => {
                 return (
@@ -80,7 +79,9 @@ export function CartBottomSheet({
                       />
                     </View>
                     <View className="flex-1 items-start gap-4">
-                      <Text className="font-medium">{p.attributes.name}</Text>
+                      <Text className="font-medium line-clamp-2">
+                        {p.attributes.name}
+                      </Text>
                       <View className="border border-border flex-row items-center h-9">
                         <Pressable className="w-8 items-center justify-center">
                           <Text className="text-sm">-</Text>
@@ -107,10 +108,12 @@ export function CartBottomSheet({
             )}
           </View>
           {cart.length ? (
-            <Button className="py-2 text-sm my-4">Checkout</Button>
+            <View className="fixed">
+              <Button className="py-2 text-sm">Checkout</Button>
+            </View>
           ) : null}
         </View>
       </ScrollView>
-    </BottomSheet>
+    </BottomSheetModal>
   );
 }

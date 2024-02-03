@@ -16,8 +16,7 @@ import { cn } from "@/lib/utils";
 export default function Home() {
   const { data } = useProducts();
   const categoriesRef = useAnimatedRef<Animated.View>();
-  const { cartLength } = useStore();
-  const [isOpen, setIsOpen] = useState(false);
+  const { cartLength, onOpenChange, isOpen } = useStore();
 
   return (
     <SafeAreaView
@@ -30,7 +29,7 @@ export default function Home() {
         <View className="flex-row items-center justify-between px-6 mb-6">
           <Text className="text-3xl font-medium">Sandoq</Text>
           {/* <CartBottomSheet /> */}
-          <Pressable onPress={() => setIsOpen(true)} className="relative">
+          <Pressable onPress={() => onOpenChange(true)} className="relative">
             <ShoppingBag color={"#333"} />
             <View className="absolute bg-red-500 z-10 w-5 h-5 rounded-full -top-2 -right-2 items-center justify-center">
               <Text className="text-white text-xs">{cartLength}</Text>
@@ -45,7 +44,7 @@ export default function Home() {
         {data ? <ProductsList products={data} isHorizontal={false} /> : null}
       </ScrollView>
 
-      <CartBottomSheet isOpen={isOpen} onOpenChange={setIsOpen} />
+      <CartBottomSheet />
     </SafeAreaView>
   );
 }
