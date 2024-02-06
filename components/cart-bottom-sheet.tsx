@@ -107,13 +107,13 @@ export function CartBottomSheet({}: CartBottomSheetProps) {
               <Text className="text-center">Cart is empty</Text>
             )}
           </View>
-          {cart.length ? (
-            <View className="fixed">
-              <Button className="py-2 text-sm">Checkout</Button>
-            </View>
-          ) : null}
         </View>
       </ScrollView>
+      {cart.length ? (
+        <View className="absolute bottom-0 w-full py-4 px-6 bg-background">
+          <Button className="py-2 text-sm">Checkout</Button>
+        </View>
+      ) : null}
     </BottomSheetModal>
   );
 }

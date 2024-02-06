@@ -1,19 +1,29 @@
 import ProductImage from "@/components/product-image";
 import { Input } from "@/components/ui/input";
 import { useCategory } from "@/hooks/useCategory";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useSearchProduct } from "@/hooks/useProducts";
 import { BASE_URL } from "@/lib/constants";
-import React from "react";
+import React, { useState } from "react";
 import { FlatList, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Search() {
+  const [searchVal, setSearchVal] = useState("");
+  const debouncedValue = useDebounce(searchVal);
   const { data, isLoading } = useCategory();
+  const { data: products } = useSearchProduct({ query: debouncedValue });
+
   return (
     <SafeAreaView className="flex-1">
       <ScrollView>
         <View className="flex-1 px-6 py-4">
           <View className="mb-6">
-            <Input placeholder="Search" />
+            <Input
+              value={searchVal}
+              onChangeText={(text) => setSearchVal(text)}
+              placeholder="Search"
+            />
           </View>
 
           <View className="">

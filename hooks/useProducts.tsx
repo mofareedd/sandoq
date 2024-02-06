@@ -19,3 +19,23 @@ export function useProducts() {
     },
   });
 }
+
+export function useSearchProduct({ query }: { query: string }) {
+  return useQuery({
+    queryKey: ["search"],
+    queryFn: async (): Promise<ProductType[]> => {
+      try {
+        const { data } = await client<ProductsMetaType>(
+          `/api/products?filters[name][$containsi]=${query}&populate=*`
+        );
+
+        console.log(data.data);
+        return data.data;
+      } catch (e: any) {
+        console.log(e);
+        throw new Error("Something Went Worng!");
+      }
+    },
+    enabled: !!query,
+  });
+}
