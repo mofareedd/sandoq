@@ -12,7 +12,9 @@ export default function Search() {
   const [searchVal, setSearchVal] = useState("");
   const debouncedValue = useDebounce(searchVal);
   const { data, isLoading } = useCategory();
-  const { data: products } = useSearchProduct({ query: debouncedValue });
+  const { data: products, refetch } = useSearchProduct({
+    query: debouncedValue,
+  });
 
   return (
     <SafeAreaView className="flex-1">
@@ -26,8 +28,32 @@ export default function Search() {
             />
           </View>
 
+          {searchVal && products && products.length ? (
+            <View className="gap-4">
+              {products.map((p) => {
+                return (
+                  <View key={p.id} className="flex-row items-center gap-4">
+                    <View className="w-10 h-16">
+                      <ProductImage
+                        source={`${BASE_URL}${p.attributes.images.data[0]?.attributes.url}`}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "contain",
+                        }}
+                      />
+                    </View>
+                    <View className="flex-1 border-b border-border pb-4">
+                      <Text className="line-clamp-2">{p.attributes.name}</Text>
+                    </View>
+                  </View>
+                );
+              })}
+            </View>
+          ) : null}
+
           <View className="">
-            {data && data.length ? (
+            {!searchVal && data && data.length ? (
               <FlatList
                 data={data}
                 numColumns={2}

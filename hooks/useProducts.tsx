@@ -29,7 +29,6 @@ export function useSearchProduct({ query }: { query: string }) {
           `/api/products?filters[name][$containsi]=${query}&populate=*`
         );
 
-        console.log(data.data);
         return data.data;
       } catch (e: any) {
         console.log(e);
